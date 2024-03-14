@@ -2,7 +2,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const timeSheetTable = document.querySelector("#time-sheet table tbody");
   const addEntryButton = document.querySelector("#add-entry");
   const salaryForm = document.querySelector("#salary-form");
-  const totalHoursDisplay = document.querySelector("#total-hours");
+  const totalHoursLabel = document.querySelector("#total-hours");
+  const totalHoursDisplay = document.createElement("span");
+  totalHoursDisplay.classList.add("total-hours");
 
   let timeSheetData = JSON.parse(localStorage.getItem("timeSheetData")) || [];
 
@@ -70,6 +72,8 @@ document.addEventListener("DOMContentLoaded", function() {
     event.preventDefault();
     calculateSalary();
   });
+
+  totalHoursLabel.appendChild(totalHoursDisplay);
 
   renderTimeSheet();
   updateTotalHours();
