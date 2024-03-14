@@ -2,8 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const timeSheetTable = document.querySelector("#time-sheet table tbody");
   const addEntryButton = document.querySelector("#add-entry");
   const salaryForm = document.querySelector("#salary-form");
-  const totalHoursInput = document.querySelector("#total-hours");
-  const salaryResult = document.querySelector("#salary-result");
+  const totalHoursDisplay = document.querySelector("#total-hours");
 
   let timeSheetData = JSON.parse(localStorage.getItem("timeSheetData")) || [];
 
@@ -50,14 +49,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function updateTotalHours() {
     const totalHours = timeSheetData.reduce((total, entry) => total + parseFloat(entry.totalHours), 0);
-    totalHoursInput.value = totalHours.toFixed(2);
+    totalHoursDisplay.textContent = totalHours.toFixed(2);
   }
 
   function calculateSalary() {
     const hourlyRate = parseFloat(document.querySelector("#hourly-rate").value);
-    const totalHours = parseFloat(totalHoursInput.value);
+    const totalHours = parseFloat(totalHoursDisplay.textContent);
     const totalSalary = hourlyRate * totalHours;
-    salaryResult.innerHTML = `Зарплата: ${totalSalary.toFixed(2)} руб.`;
+    document.querySelector("#salary-result").textContent = `Зарплата: ${totalSalary.toFixed(2)} руб.`;
   }
 
   addEntryButton.addEventListener("click", function() {
