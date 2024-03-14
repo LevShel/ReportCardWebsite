@@ -4,9 +4,12 @@ document.addEventListener("DOMContentLoaded", function() {
   const salaryForm = document.querySelector("#salary-form");
   const salaryResult = document.querySelector("#salary-result");
 
-  let timeSheetData = [];
+  let timeSheetData = JSON.parse(localStorage.getItem("timeSheetData")) || [];
 
-  // Функция для добавления записи в табель
+  function saveDataToLocalStorage() {
+    localStorage.setItem("timeSheetData", JSON.stringify(timeSheetData));
+  }
+
   function addEntryToTimeSheet(date, startTime, endTime) {
     const totalHours = calculateTotalHours(startTime, endTime);
     const entry = {
@@ -16,10 +19,10 @@ document.addEventListener("DOMContentLoaded", function() {
       totalHours: totalHours
     };
     timeSheetData.push(entry);
+    saveDataToLocalStorage();
     renderTimeSheet();
   }
 
-  // Функция для рендеринга табеля
   function renderTimeSheet() {
     timeSheetTable.innerHTML = "";
     timeSheetData.forEach(function(entry) {
@@ -34,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Функция для расчета общего времени
   function calculateTotalHours(startTime, endTime) {
     const start = new Date("1970-01-01 " + startTime);
     const end = new Date("1970-01-01 " + endTime);
@@ -43,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
     return hours.toFixed(2);
   }
 
-  // Обработчик кнопки "Добавить запись"
   addEntryButton.addEventListener("click", function() {
     const date = prompt("Введите дату (гггг-мм-дд):");
     const startTime = prompt("Введите время начала работы (чч:мм):");
@@ -51,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function() {
     addEntryToTimeSheet(date, startTime, endTime);
   });
 
-  // Обработчик отправки формы с данными о зарплате
   salaryForm.addEventListener("submit", function(event) {
     event.preventDefault();
     const hourlyRate = parseFloat(document.querySelector("#hourly-rate").value);
@@ -59,4 +59,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const totalSalary = hourlyRate * totalHours;
     salaryResult.innerHTML = `Зарплата: ${totalSalary.toFixed(2)} руб.`;
   });
+
+  renderTimeSheet();
 });
