@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const timeSheetTable = document.querySelector("#time-sheet table tbody");
   const addEntryButton = document.querySelector("#add-entry");
   const salaryForm = document.querySelector("#salary-form");
+  const totalHoursInput = document.querySelector("#total-hours");
   const salaryResult = document.querySelector("#salary-result");
 
   let timeSheetData = JSON.parse(localStorage.getItem("timeSheetData")) || [];
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     timeSheetData.push(entry);
     saveDataToLocalStorage();
     renderTimeSheet();
+    updateTotalHours();
     calculateSalary();
   }
 
@@ -46,9 +48,14 @@ document.addEventListener("DOMContentLoaded", function() {
     return hours.toFixed(2);
   }
 
-  function calculateSalary() {
+  function updateTotalHours() {
     const totalHours = timeSheetData.reduce((total, entry) => total + parseFloat(entry.totalHours), 0);
+    totalHoursInput.value = totalHours.toFixed(2);
+  }
+
+  function calculateSalary() {
     const hourlyRate = parseFloat(document.querySelector("#hourly-rate").value);
+    const totalHours = parseFloat(totalHoursInput.value);
     const totalSalary = hourlyRate * totalHours;
     salaryResult.innerHTML = `Зарплата: ${totalSalary.toFixed(2)} руб.`;
   }
@@ -66,5 +73,6 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   renderTimeSheet();
-  calculateSalary(); // Вызываем сразу при загрузке страницы
+  updateTotalHours();
+  calculateSalary();
 });
